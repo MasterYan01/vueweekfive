@@ -1,6 +1,19 @@
 const { createApp } = Vue
 const url = 'https://vue3-course-api.hexschool.io'
 const path = 'master1386'
+Object.keys(VeeValidateRules).forEach(rule => {
+    if (rule !== 'default') {
+        VeeValidate.defineRule(rule, VeeValidateRules[rule]);
+    }
+});
+// 讀取外部的資源
+VeeValidateI18n.loadLocaleFromURL('./zh_TW.json');
+
+// Activate the locale
+VeeValidate.configure({
+    generateMessage: VeeValidateI18n.localize('zh_TW'),
+    // validateOnInput: true, // 調整為：輸入文字時，就立即進行驗證
+});
 const productModal = {
     //當ＩＤ變動時，取得遠端資料，並呈現modal
     props: ['id', 'addToCart'],
@@ -40,7 +53,8 @@ const app = createApp({
         return {
             products: [],
             productId: '',
-            cart: {}
+            cart: {},
+            user:{}
         }
     },
     methods: {
@@ -82,11 +96,11 @@ const app = createApp({
         },
         updateCartItem(item) {//購物車id 產品id
             const data = {
-                "product_id":item.product.id,
+                "product_id": item.product.id,
                 "qty": item.qty
             }
-            console.log(data,item.id);
-            axios.put(`${url}/v2/api/${path}/cart/${item.id}`,{data})
+            console.log(data, item.id);
+            axios.put(`${url}/v2/api/${path}/cart/${item.id}`, { data })
                 .then(res => {
                     //console.log('更新購物車', res.data);
                     this.getCarts()
@@ -100,9 +114,12 @@ const app = createApp({
                     this.getCarts()
 
                 })
+        },
+        onSubmit(){
+            alert('送出成功');
         }
-          
-            
+
+
     },
     mounted() {
         this.getProduct()
@@ -110,6 +127,9 @@ const app = createApp({
     },
     components: { productModal }
 })
+app.component('VForm', VeeValidate.Form);
+app.component('VField', VeeValidate.Field);
+app.component('ErrorMessage', VeeValidate.ErrorMessage);
 
 app.mount('#app')
 

@@ -119,12 +119,14 @@
                     </tfoot>
                 </table>
             </div>
-            <!-- <div class="my-5 row justify-content-center">
-                <!-- <v-form ref="form" class="col-md-6" v-slot="{ errors }">
+              <div class="my-5 row justify-content-center">
+                 <v-form ref="form" class="col-md-6" v-slot="{ errors }" @submit="onSubmit">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <v-field id="email" name="email" type="email" class="form-control"
-                            :class="{ 'is-invalid': errors['email'] }" placeholder="請輸入 Email"></v-field>
+                            :class="{ 'is-invalid': errors.email }" placeholder="請輸入 Email" v-model="user.email"
+                            rules="required|email"
+                            ></v-field>
                         <error-message name="email" class="invalid-feedback"></error-message>
                     </div>
 
@@ -138,7 +140,7 @@
                     <div class="mb-3">
                         <label for="tel" class="form-label">收件人電話</label>
                         <v-field id="tel" name="電話" type="text" class="form-control"
-                            :class="{ 'is-invalid': errors['電話'] }" placeholder="請輸入電話"></v-field>
+                            :class="{ 'is-invalid': errors['電話'] }" placeholder="請輸入電話" rules="required"></v-field>
                         <error-message name="電話" class="invalid-feedback"></error-message>
                     </div>
 
@@ -156,8 +158,8 @@
                     <div class="text-end">
                         <button type="submit" class="btn btn-danger">送出訂單</button>
                     </div>
-                </v-form> -->
-            </div> -->
+                </v-form>
+            </div>  
         </div>
     </div>
     <script type="text/x-template" id="userProductModal">
