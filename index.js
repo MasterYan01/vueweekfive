@@ -16,7 +16,7 @@ VeeValidate.configure({
 });
 const productModal = {
     //當ＩＤ變動時，取得遠端資料，並呈現modal
-    props: ['id', 'addToCart'],
+    props: ['id', 'addToCart', 'openModal'],
     data() {
         return {
             tempProduct: {},
@@ -26,20 +26,27 @@ const productModal = {
     template: `#userProductModal`,
     mounted() {
         this.modal = new bootstrap.Modal(this.$refs.modal)
+        this.$refs.modal.addEventListener('hidden.bs.modal', (event) => {
+            console.log('openModal關閉了');
+            this.openModal('')
+        })
 
     },
     watch: {
         id() {
-            //console.log(this.id);
-            axios.get(`${url}/v2/api/${path}/product/${this.id}`)
-                .then(res => {
-                    console.log('產品列表', res.data);
-                    this.tempProduct = res.data.product
-                    this.modal.show()
-                })
-                .catch(err => {
-                    console.log(err.data);
-                })
+            if (this.id) {
+
+                axios.get(`${url}/v2/api/${path}/product/${this.id}`)
+                    .then(res => {
+                        console.log('產品列表', res.data);
+                        this.tempProduct = res.data.product
+                        this.modal.show()
+                    })
+                    .catch(err => {
+                        console.log(err.data);
+                    })
+                //console.log(this.id);
+            }
         }
     },
     methods: {
@@ -54,7 +61,7 @@ const app = createApp({
             products: [],
             productId: '',
             cart: {},
-            user:{}
+            user: {}
         }
     },
     methods: {
@@ -115,8 +122,19 @@ const app = createApp({
 
                 })
         },
-        onSubmit(){
+        deleteAllItem() {
+            axios.delete(`${url}/v2/api/${path}/carts`)
+              .then(() => {
+                this.getCarts()
+                alert('已清空購物車')
+              })
+              .catch(err => {
+                alert(err.data.message)
+              })
+          },
+        onSubmit() {
             alert('送出成功');
+            this.$refs.form.resetForm()
         }
 
 
